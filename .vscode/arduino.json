@@ -1,6 +1,6 @@
 {
     "configuration": "cpu=atmega2560",
     "board": "arduino:avr:modelmega",
-    "sketch": "robotV3.ino",
-    "port": "/dev/tty.usbserial-14310"
+    "sketch": "SciMju-Model-Pro.ino",
+    "port": "/dev/tty.usbserial-14510"
 }
