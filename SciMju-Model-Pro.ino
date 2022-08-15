@@ -213,15 +213,13 @@ void Can4(){
   RR(4,1);
 
   GoPlace();
-
-  finish();
 }
-
 ///////////finish////////////
 void finish() {
   FF(4);
   FF(4);
   LL(4,1);
+  Finish_Circle();
   Finish();
 }
 ///////// PART
@@ -265,52 +263,112 @@ void goCheck(){
   }
 }
 void CheckCan(int Position){
-  // Check Color On The Floor
-  oledClear();
-  if(S_FR >= ((Ref_FR_R + Ref_FR_G) / 2) )
+
+  while (true)
   {
-    oled(0,10,"RED    ");
-    // Red
+
+    if (readCan() == readFloor()){
+
+      PlaceCan();
+
+      if (Position == 1){
+        backOne();
+      }
+      else if (Position == 2){
+        backTwo();
+      }
+      else if (Position == 3){
+        backThree();
+      }
+      else if (Position == 4){
+        backFour();
+      }
+      break;
+    }
+    else{
+      CanPosition[Position] = readFloor();
+      Position++;
+      goNextCan();
+    }
+
   }
-  else if(S_FG >= ((Ref_FG_G + Ref_FG_B) / 2))
-  {
-    oled(0,10,"GREEN   ");
-    // Green
-  }
-  else if(S_FG >= ((Ref_FG_B + Ref_FG_BK) / 2))
-  {
-    oled(0,10,"BLUE    ");
-    // Blue
-  }
-  else {
-    oled(0,10,"BLACK    ");
-    // Black
-  }
-  delay(20);
+
 }
 
 void goOne(){
+  LL(4,1);
+  LL_Circle();
 
+  LL(4,1);
+  RR(4,1);
+
+  FF_Can();
 }
 void goTwo(){
+  LL(4,1);
+  LL_Circle();
 
+  FF(4);
+  
+  FF_Can();
 }
 void goThree(){
+  RR(4,1);
+  RR_Circle();
 
+  FF(4);
+  
+  FF_Can();
 }
 void goFour(){
+  RR(4,1);
+  RR_Circle();
 
+  RR(4,1);
+  LL(4,1);
+
+  FF_Can();
+}
+
+void goNextCan(){
+  Uturn();
+
+  LL(4,1);
+  LL(4,1);
+  FF_Can();
 }
 
 void backOne(){
+  Uturn();
 
+  LL(4,1);
+  RR(4,1);
+
+  RR(4,1);
+  RR_Circle();
 }
 void backTwo(){
+  Uturn();
 
+  FF(4,1);
+
+  RR(4,1);
+  RR_Circle();
 }
 void backThree(){
+  Uturn();
 
+  FF(4,1);
+
+  LL(4,1);
+  LL_Circle();
 }
 void backFour(){
+  Uturn();
 
+  RR(4,1);
+  LL(4,1);
+
+  LL(4,1);
+  LL_Circle();
 }

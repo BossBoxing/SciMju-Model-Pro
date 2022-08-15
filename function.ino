@@ -1342,17 +1342,20 @@ void setServo(){
 
 void code() {
   start();
+  Can1();
+  Can2();
+  Can3();
+  Can4();
+  finish();
   
   Stop(100000000);
 }
 void setSensorHand(){
-  int WHITE_COLOR=0;
-  int BLACK_COLOR=0;
   setTextSize(2);
   delay(500);
   while (SW_OK() == 1) {
     oled(10, 0,"INPUT");
-    oled(5,20,"WHITE CAN");
+    oled(5,20,"RED CAN");
     delay(20);
   }
   // while(SW_OK() == 0){}
@@ -1361,13 +1364,14 @@ void setSensorHand(){
   beep();
   delay(500);
   ////
-  WHITE_COLOR = S_CR; // EEPROM.update(startColorAddress + 1, S_CR);
+  EEPROM.update(startColorHandAddress + 1, S_CR);
+  EEPROM.update(startColorHandAddress + 5, S_CG);
   ////
   setTextSize(2);
   delay(500);
   while (SW_OK() == 1) {
     oled(10, 0,"SAVE!");
-    oled(5,20,"WHITE CAN");
+    oled(5,20,"RED CAN");
     oled(5,40,"-NEXT-");
     delay(20);
   }
@@ -1381,6 +1385,66 @@ void setSensorHand(){
   delay(500);
   while (SW_OK() == 1) {
     oled(10, 0,"INPUT");
+    oled(5,20,"GREEN CAN");
+    delay(20);
+  }
+  // while(SW_OK() == 0){}
+  Keep();
+  oledClear();
+  beep();
+  delay(500);
+  ////
+  EEPROM.update(startColorHandAddress + 2, S_CR);
+  EEPROM.update(startColorHandAddress + 6, S_CG);
+  ////
+  setTextSize(2);
+  delay(500);
+  while (SW_OK() == 1) {
+    oled(10, 0,"SAVE!");
+    oled(5,20,"BLUE CAN");
+    oled(5,40,"-NEXT-");
+    delay(20);
+  }
+  // while(SW_OK() == 0){}
+  Place();
+  oledClear();
+  beep();
+  delay(500);
+
+  setTextSize(2);
+  delay(500);
+  while (SW_OK() == 1) {
+    oled(10, 0,"INPUT");
+    oled(5,20,"BLUE CAN");
+    delay(20);
+  }
+  // while(SW_OK() == 0){}
+  Keep();
+  oledClear();
+  beep();
+  delay(500);
+  ////
+  EEPROM.update(startColorHandAddress + 3, S_CR);
+  EEPROM.update(startColorHandAddress + 7, S_CG);
+  ////
+  setTextSize(2);
+  delay(500);
+  while (SW_OK() == 1) {
+    oled(10, 0,"SAVE!");
+    oled(5,20,"GREEN CAN");
+    oled(5,40,"-NEXT-");
+    delay(20);
+  }
+  // while(SW_OK() == 0){}
+  Place();
+  oledClear();
+  beep();
+  delay(500);
+
+  setTextSize(2);
+  delay(500);
+  while (SW_OK() == 1) {
+    oled(10, 0,"INPUT");
     oled(5,20,"BLACK CAN");
     delay(20);
   }
@@ -1390,8 +1454,8 @@ void setSensorHand(){
   beep();
   delay(500);
   ////
-  BLACK_COLOR = S_CR; // EEPROM.update(startColorAddress + 4, S_CR);
-                // EEPROM.update(startColorAddress + 1, ((WHITE_COLOR + BLACK_COLOR) / 2 ));
+  EEPROM.update(startColorHandAddress + 4, S_CR);
+  EEPROM.update(startColorHandAddress + 8, S_CG);
   ////
   setTextSize(2);
   delay(500);
@@ -1598,14 +1662,62 @@ void setSensor() {
   oled(0, 53, "R      %d", EEPROM.read(startReffAddress + 5));
   while (1) {}
 }
-int readCan(){ // คำสั่งอ่านค่ากระป๋องด้วยเซนเซอร์มือ ออกมาเป็นตัวเลข 1 ขาว 0 ดำ
-  
-  // if (S_CR >= Ref_CR){
-  //   return 1; // WHITE CAN
-  // }
-  // else{ 
-  //   return 0; // YELLOW CAN
-  // }
+int readFloor(){ // คำสั่งอ่านค่ากระป๋องด้วยเซนเซอร์สีต่างๆ บนพื้น ออกมาเป็นตัวเลข 1 แดง 2 เขียว 3 น้ำเงิน 4 ดำ
+  // Check Color On The Floor
+  if(S_FR >= ((Ref_FR_R + Ref_FR_G) / 2) )
+  {
+    return 1;
+    // Red
+  }
+  else if(S_FG >= ((Ref_FG_G + Ref_FG_B) / 2))
+  {
+    return 2;
+    // Green
+  }
+  else if(S_FG >= ((Ref_FG_B + Ref_FG_BK) / 2))
+  {
+    return 3;
+    // Blue
+  }
+  else {
+    return 4;
+    // Black
+  }
+}
+int readCan(){ // คำสั่งอ่านค่ากระป๋องด้วยเซนเซอร์มือ ออกมาเป็นตัวเลข 1 แดง 2 เขียว 3 น้ำเงิน 4 ดำ
+  // Check Color On The Hand
+  if(S_CR >= ((Ref_CR_R + Ref_CR_G) / 2) )
+  {
+    return 1;
+    // Red
+  }
+  else if(S_CG >= ((Ref_CG_G + Ref_CG_B) / 2))
+  {
+    return 2;
+    // Green
+  }
+  else if(S_CG >= ((Ref_CG_B + Ref_CG_BK) / 2))
+  {
+    return 3;
+    // Blue
+  }
+  else {
+    return 4;
+    // Black
+  }
+}
+
+void FF_Can(){
+  if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
+    TrackSlowTime(50);
+  }
+  while(S_LL > Ref_L || S_RR > Ref_RR){TrackCan();}
+  Stop(100);
+}
+
+void Uturn(){
+  motor(1,Slow_L); motor(2,Slow_R); delay(200);
+  TL90();
 }
 
 void RR_Circle(){
@@ -1621,4 +1733,11 @@ void LL_Circle(){
     Pid_Circle(40);
   }
   LL(4,1);
+}
+void Finish_Circle(){
+  while(S_L >= Ref_L || S_LL > Ref_LL)
+  {
+    Pid_Circle(40);
+  }
+  // FF(4);
 }
