@@ -43,28 +43,29 @@ void Place() {
   Stop(1);
 }
 int findError(){
-  if(S_LL < Ref_LL && S_L > Ref_L && S_R > Ref_R && S_RR > Ref_RR)
-  {
-    return ((((S_LL*2) + S_L) ) - (S_R + S_RR));
-  }
-  else if(S_LL < Ref_LL && S_L < Ref_L && S_R > Ref_R && S_RR > Ref_RR)
-  {
-    return ((((S_LL*2) + S_L) ) - (S_R + S_RR));
-  }
+  // if(S_LL < Ref_LL && S_L > Ref_L)
+  // {
+  //   return ((((S_LL*2) + S_L) ) - (S_R + S_RR));
+  // }
+  // if(S_LL < Ref_LL && S_L < Ref_L)
+  // {
+  //   return ((((S_LL*2) + S_L) ) - (S_R + S_RR));
+  // }
 
-  else if(S_LL > Ref_LL && S_L > Ref_L && S_R > Ref_R && S_RR < Ref_RR)
-  {
-    return (((S_LL + S_L) ) - (S_R + (S_RR*2)));
-  }
-  else if(S_LL > Ref_LL && S_L > Ref_L && S_R < Ref_R && S_RR < Ref_RR)
-  {
-    return (((S_LL + S_L) ) - (S_R + (S_RR*2)));
-  }
+  // if(S_R > Ref_R && S_RR < Ref_RR)
+  // {
+  //   return (((S_LL + S_L) ) - (S_R + (S_RR*2)));
+  // }
+  // if(S_R < Ref_R && S_RR < Ref_RR)
+  // {
+  //   return (((S_LL + S_L) ) - (S_R + (S_RR*2)));
+  // }
 
-  else
-  {
-    return (((S_LL + S_L) ) - (S_R + S_RR));
-  }
+  // else
+  // {
+  //   return ((((S_LL*2) + S_L) ) - (S_R + (S_RR*2)));
+  // }
+  return ((((S_LL*2) + S_L) ) - (S_R + (S_RR*2)));
 }
 void calculate_pid(int power) {
   error = findError();
@@ -119,7 +120,7 @@ void TrackSlow() {
   Pid(60);
 }
 void TrackCan() {
-  Pid(20);
+  Pid(30);
 }
 void TrackSlowSmooth() {
   /*
@@ -248,10 +249,10 @@ void FF(int i) {
   // Wait();
 }
 void LL(int i, int j) { //left
-  if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
-    while(S_LLL <= Ref_LLL || S_RRR <= Ref_RRR){TrackSlow();}
-    TrackSlowTime(20);
-  }
+  // if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
+  //   while(S_LLL <= Ref_LLL || S_RRR <= Ref_RRR){TrackSlow();}
+  //   TrackSlowTime(20);
+  // }
   if (i == 1) { //มุมฉาก
     while (1) {
       if ((S_LL < Ref_LL) && (S_RR < Ref_RR))
@@ -349,13 +350,13 @@ void LL(int i, int j) { //left
     }
   }
   else if (i == 4) { //มุมฉากธรรมดา
-    while (1) {
-      if ((S_LL < Ref_LL) || (S_RR < Ref_RR))
-      {
-        break;
-      }
-      Track();
-    }
+    // while (1) {
+    //   if ((S_LL < Ref_LL) || (S_RR < Ref_RR))
+    //   {
+    //     break;
+    //   }
+    //   Track();
+    // }
     while (1) {
       if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR))
       {
@@ -447,10 +448,10 @@ void LL(int i, int j) { //left
   // Wait();
 }
 void RR(int i, int j) { //right
-  if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
-    while(S_LLL <= Ref_LLL || S_RRR <= Ref_RRR){TrackSlow();}
-    TrackSlowTime(20);
-  }
+  // if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
+  //   while(S_LLL <= Ref_LLL || S_RRR <= Ref_RRR){TrackSlow();}
+  //   TrackSlowTime(20);
+  // }
 
   if (i == 1) { //มุมฉาก
     while (1) {
@@ -549,13 +550,13 @@ void RR(int i, int j) { //right
     }
   }
   else if (i == 4) { //มุมฉากธรรมดา
-    while (1) {
-      if ((S_LL < Ref_LL) || (S_RR < Ref_RR))
-      {
-        break;
-      }
-      Track();
-    }
+    // while (1) {
+    //   if ((S_LL < Ref_LL) || (S_RR < Ref_RR))
+    //   {
+    //     break;
+    //   }
+    //   Track();
+    // }
     while (1) {
       if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR))
       {
@@ -735,7 +736,7 @@ void PlaceCan(String s) {
 }
 void Start() {
   motor(1, Slow_R); motor(2, Slow_L);
-  delay(580);
+  delay(600);
 }
 void Finish() {
   if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
@@ -1715,15 +1716,20 @@ void FF_Can(){
   if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
     TrackSlowTime(50);
   }
-  while(S_LL < Ref_LL || S_L < Ref_L || S_C < Ref_C || S_R < Ref_R || S_RR < Ref_RR)
+  while(S_L > Ref_L || S_C > Ref_C || S_R > Ref_R)
   {
     TrackCan();
+  }
+  while(S_C <= Ref_C)
+  {
+    FwCan(10);
   }
   Stop(100);
   while(S_C > Ref_C)
   {
     BkCan(10);
   }
+  BkCan(100);
   Stop(100);
 }
 
@@ -1733,23 +1739,43 @@ void Uturn(){
 }
 
 void RR_Circle(){
-  while(S_R >= Ref_R || S_RR > Ref_RR)
+  while(S_C > Ref_C || S_R > Ref_R || S_RR > Ref_RR)
   {
     Pid_Circle(40);
   }
-  RR(4,1);
+  while(S_RRR > Ref_RRR)
+  {
+    Pid(40);
+  }
+  Fw(T4);
+  Log(logTime);
+  TR90();
+  Stop(20);
+  TrackSlowTime(timeOutLineT4);
 }
 void LL_Circle(){
-  while(S_L >= Ref_L || S_LL > Ref_LL)
+  while(S_LL > Ref_LL || S_L > Ref_L || S_C > Ref_C)
   {
     Pid_Circle(40);
   }
-  LL(4,1);
+  while(S_LLL > Ref_LLL)
+  {
+    Pid(40);
+  }
+  Fw(T4);
+  Log(logTime);
+  TL90();
+  Stop(20);
+  TrackSlowTime(timeOutLineT4);
 }
 void Finish_Circle(){
-  while(S_L >= Ref_L || S_LL > Ref_LL)
+  while(S_LL > Ref_LL || S_L > Ref_L || S_C > Ref_C)
   {
     Pid_Circle(40);
+  }
+  while(S_LLL >= Ref_LLL)
+  {
+    Pid(40);
   }
   // FF(4);
 }

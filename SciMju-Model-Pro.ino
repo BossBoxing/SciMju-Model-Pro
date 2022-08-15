@@ -15,7 +15,7 @@
 #define startColorFloorAddress 60 // 40 - 43
 
 ///////////////////////////////////////////////////
-int diff_time = 50;
+int diff_time = 40;
 int T1 = 80 + diff_time; //เดินหน้าขึ้นไป เส้นมุมฉาก
 int T2 = 390 + diff_time; //เดินหน้าขึ้นไป เส้นมุมแหลม
 int T3 = 340 + diff_time; //เดินหน้าขึ้นไป เส้นมุมแหลมแบบคู่
@@ -121,7 +121,7 @@ int Raise_Down = EEPROM.read(startServoSetAddress + 5) == 255 ? 19 : EEPROM.read
 #define S_CG map(analog(10),0,1023,0,169) //พอร์ตเซ็นเซอร์สีเขียวบนมือ
 #define S_FR map(analog(7),0,1023,0,169) //พอร์ตเซ็นเซอร์สีแดงบนพื้น
 #define S_FG map(analog(8),0,1023,0,169) //พอร์ตเซ็นเซอร์สีเขียวบนพื้น
-#define S_Can 8 //พอร์ตเซ็นเซอร์เซ็คกระป๋อง
+#define S_Can 11 //พอร์ตเซ็นเซอร์เซ็คกระป๋อง
 
 #define Clasp 2 //พอร์ต servo หนีบ
 #define Raise 1 //พอร์ต servo ยก
@@ -140,9 +140,9 @@ void loop() {
   }
   if (function == 2) {
     //start();
-    RR_Circle();
+    // RR_Circle();
     // Pid_Circle(50);
-    // code();
+    code();
   }
   if (function == 3) {
     setSensorHand();
@@ -163,7 +163,8 @@ void loop() {
     // Stop(100000);
   }
   if (function == 5) {
-    CheckCan(0);
+    FF_Can();
+    // CheckCan(0);
 
     //setCan();
 
@@ -173,6 +174,7 @@ void loop() {
 //////////start//////////
 void start() {
   Start();
+  RR_Circle();
 }
 //// CAN PART
 void Can1(){
@@ -251,15 +253,19 @@ void GoPlace(){
 void goCheck(){
   if (CanPosition[1] == 0){
     goOne();
+    CheckCan(1);
   }
   else if (CanPosition[2] == 0){
     goTwo();
+    CheckCan(2);
   }
   else if (CanPosition[3] == 0){
     goThree();
+    CheckCan(3);
   }
   else if (CanPosition[4] == 0){
     goFour();
+    CheckCan(4);
   }
 }
 void CheckCan(int Position){
