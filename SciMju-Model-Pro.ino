@@ -269,7 +269,7 @@ void CheckCan(int Position){
 
     if (readCan() == readFloor()){
 
-      PlaceCan();
+      PlaceCan("R");
 
       if (Position == 1){
         backOne();
