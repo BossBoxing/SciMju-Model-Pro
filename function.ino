@@ -17,6 +17,10 @@ void FwCan(int t) {
   motor(1, 20); motor(2, 20);
   delay(t);
 }
+void BkCan(int t) {
+  motor(1, -20); motor(2, -20);
+  delay(t);
+}
 void Bk(int t) {
   motor(1, -30); motor(2, -30);
   delay(t);
@@ -1711,7 +1715,15 @@ void FF_Can(){
   if ((S_LLL < Ref_LLL) || (S_RRR < Ref_RRR)) {
     TrackSlowTime(50);
   }
-  while(S_LL > Ref_L || S_RR > Ref_RR){TrackCan();}
+  while(S_LL < Ref_LL || S_L < Ref_L || S_C < Ref_C || S_R < Ref_R || S_RR < Ref_RR)
+  {
+    TrackCan();
+  }
+  Stop(100);
+  while(S_C > Ref_C)
+  {
+    BkCan(10);
+  }
   Stop(100);
 }
 
