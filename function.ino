@@ -656,9 +656,10 @@ void InCan(int i) {
     TrackSlowTime(50);
   }
   while (1) {
-    if (getdist(S_Can) < SS_Can) //((S_L < Ref_L) && (S_R < Ref_R)) //if (getdist(S_Can) < SS_Can)
+    if (getdist(S_Can) <= SS_Can) //((S_L < Ref_L) && (S_R < Ref_R)) //if (getdist(S_Can) < SS_Can)
     {
       //  CheckCan
+      FwCan(350);
       Stop(30);
       if (i == 1) {
         Keep();
@@ -706,7 +707,7 @@ void InCan(int i) {
       TrackSlowTime(50);
       break;
     }
-    Pid(37);
+    Pid(40);
   }
   // Wait();
 }
@@ -1734,7 +1735,9 @@ void FF_Can(){
 }
 
 void Uturn(){
-  motor(1,Slow_L); motor(2,Slow_R); delay(200);
+  motor(1, -30);  motor(2, -30); delay(180);
+  Stop(50);
+  motor(1, -Slow_L);  motor(2, Slow_R); delay(250);
   TL90();
 }
 
@@ -1775,7 +1778,8 @@ void Finish_Circle(){
   }
   while(S_LLL >= Ref_LLL)
   {
-    Pid(40);
+    Fw(10);
+    // Pid(40);
   }
   // FF(4);
 }

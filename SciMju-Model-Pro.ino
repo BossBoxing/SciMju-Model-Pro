@@ -92,7 +92,7 @@ int timeOutLineT1 = 80 + diff_time; //เวลาในการวิ่งอ
 int timeOutLineT2 = 80 + diff_time; //เวลาในการวิ่งออกจากแยก เส้นมุมแหลม
 int timeOutLineT3 = 80 + diff_time; //เวลาในการวิ่งออกจากแยก เส้นมุมแหลมแบบคู่
 int timeOutLineT4 = 80 + diff_time; //เวลาในการวิ่งออกจากแยก เส้นมุมฉาก ธรรมดา
-int timeOutLineT5 = 120 + diff_time; //เวลาในการวิ่งออกจากแยก เส้นมุมฉาก สามแยก
+int timeOutLineT5 = 200 + diff_time; //เวลาในการวิ่งออกจากแยก เส้นมุมฉาก สามแยก
 
 int timeOutLineFT1 = 70 + diff_time; //เวลาในการวิ่งออกจากแยก FF เส้นมุมฉาก
 int timeOutLineFT2 = 80 + diff_time; //เวลาในการวิ่งออกจากแยก FF เส้นมุมแหลม
@@ -163,7 +163,9 @@ void loop() {
     // Stop(100000);
   }
   if (function == 5) {
-    FF_Can();
+    oledClear();
+    oled(0,10,"%d ",getdist(S_Can));
+    // FF_Can();
     // CheckCan(0);
 
     //setCan();
@@ -222,7 +224,14 @@ void finish() {
   FF(4);
   LL(4,1);
   Finish_Circle();
-  Finish();
+
+  motor(1, 45);  motor(2, 45); delay(350);
+  Stop(20);
+
+  beep();
+
+  Wait();
+  // Finish();
 }
 ///////// PART
 void GoPlace(){
@@ -272,11 +281,10 @@ void CheckCan(int Position){
 
   while (true)
   {
-
     if (readCan() == readFloor()){
-
       PlaceCan("R");
-
+      CanPosition[Position]=5;
+      
       if (Position == 1){
         backOne();
       }
@@ -292,9 +300,46 @@ void CheckCan(int Position){
       break;
     }
     else{
-      CanPosition[Position] = readFloor();
-      Position++;
-      goNextCan();
+      if (Position < 4)
+      {
+        if (CanPosition[Position + 1] == 0)
+        {
+          CanPosition[Position] = readFloor();
+          Position++;
+          goNextCan(1);
+        }
+        else if (CanPosition[Position + 2] == 0)
+        {
+          CanPosition[Position] = readFloor();
+          Position+=2;
+          goNextCan(2);
+        }
+        else if (CanPosition[Position + 3] == 0)
+        {
+          CanPosition[Position] = readFloor();
+          Position+=3;
+          goNextCan(3);
+        }
+      }
+      else
+      {
+        PlaceCan("R"); // กรณี อันสุดท้ายแล้ว แต่ไม่เจอใครเลย เข้าไปวางละก็กลับบ้าน
+        CanPosition[Position]=5;
+      
+        if (Position == 1){
+          backOne();
+        }
+        else if (Position == 2){
+          backTwo();
+        }
+        else if (Position == 3){
+          backThree();
+        }
+        else if (Position == 4){
+          backFour();
+        }
+        break;
+      }
     }
 
   }
@@ -336,16 +381,23 @@ void goFour(){
   FF_Can();
 }
 
-void goNextCan(){
+void goNextCan(int Forward_Round){
   Uturn();
 
   LL(4,1);
+  if(Forward_Round == 2){
+    FF(4);
+  }
+  else if(Forward_Round == 3){
+    FF(4);
+    FF(4);
+  }
   LL(4,1);
   FF_Can();
 }
 
 void backOne(){
-  Uturn();
+  // Uturn();
 
   LL(4,1);
   RR(4,1);
@@ -354,7 +406,7 @@ void backOne(){
   RR_Circle();
 }
 void backTwo(){
-  Uturn();
+ // Uturn();
 
   FF(4);
 
@@ -362,7 +414,7 @@ void backTwo(){
   RR_Circle();
 }
 void backThree(){
-  Uturn();
+  // Uturn();
 
   FF(4);
 
@@ -370,7 +422,7 @@ void backThree(){
   LL_Circle();
 }
 void backFour(){
-  Uturn();
+ // Uturn();
 
   RR(4,1);
   LL(4,1);

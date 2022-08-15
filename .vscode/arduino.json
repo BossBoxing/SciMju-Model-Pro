@@ -2,5 +2,6 @@
     "configuration": "cpu=atmega2560",
     "board": "arduino:avr:modelmega",
     "sketch": "SciMju-Model-Pro.ino",
-    "port": "/dev/tty.usbserial-14510"
+    "port": "/dev/tty.usbserial-14310",
+    "programmer": "arduino:avrispmkii"
 }
