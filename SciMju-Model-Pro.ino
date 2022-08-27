@@ -163,8 +163,9 @@ void loop() {
     // Stop(100000);
   }
   if (function == 5) {
-    oledClear();
-    oled(0,10,"%d ",getdist(S_Can));
+    Pid(50);
+    // oledClear();
+    // oled(0,10,"%d ",getdist(S_Can));
     // FF_Can();
     // CheckCan(0);
 
